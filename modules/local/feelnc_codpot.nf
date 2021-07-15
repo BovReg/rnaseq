@@ -4,6 +4,8 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 options        = initOptions(params.options)
 
+def VERSION = '0.2' // Not possible to retrieve version from tool
+
 process FEELNC_CODPOT {
     tag "$lncrna_gtf"
     label 'process_medium'
@@ -24,11 +26,12 @@ process FEELNC_CODPOT {
     path lncrna_gtf
 
     output:
-    path("candidate_lncRNA.gtf"), emit: lncrna_gtf
-    // path  "*.version.txt"       , emit: version //TODO how to get version
+    path "feelnc.predicted.*.gtf", emit: feelnc_predictions_gtf
+    path "*.version.txt"         , emit: version
 
     script:
     def software = getSoftwareName(task.process)
+    // TODO put options as args (--byotype, --numtx, etc (check if defaults are needed))
     """
     path_to_codpot=\$(which FEELnc_codpot.pl)
     export FEELNCPATH=\${path_to_codpot%/*}/..
@@ -41,9 +44,11 @@ process FEELNC_CODPOT {
         --numtx 5000,5000 \\
         --kmer 1,2,3,6,9,12 \\
         --outdir . \\
-        --outname exons \\
+        --outname feelnc.predicted \\
         --mode shuffle \\
         --spethres=0.98,0.98 \\
         $options.args
+
+    echo $VERSION > ${software}.version.txt
     """
 }

@@ -6,8 +6,8 @@ options        = initOptions(params.options)
 
 def VERSION = '0.2' // Not possible to retrieve version from tool
 
-process FEELNC_FILTER {
-    tag "$new_annotation_gtf"
+process FEELNC_CLASSIFIER {
+    tag "$coding_annotation_gtf"
     label 'process_medium'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -21,20 +21,24 @@ process FEELNC_FILTER {
     }
 
     input:
-    path new_annotation_gtf
     path coding_annotation_gtf
+    path exons_biotypes
 
     output:
-    path "candidate_lncrna.gtf", emit: candidate_lncrna_gtf
-    path "*.version.txt"       , emit: version
+    path "lncRNA_classes.txt", emit: lncrna_classes
+    path "*.version.txt"     , emit: version
 
     script:
     def software = getSoftwareName(task.process)
     """
-    FEELnc_filter.pl \\
-        --infile $new_annotation_gtf \\
-        --mRNAfile $coding_annotation_gtf \\
-        $options.args > candidate_lncrna.gtf
+    path_to_classifier=\$(which FEELnc_classifier.pl)
+    export FEELNCPATH=\${path_to_classifier%/*}/..
+
+    FEELnc_classifier.pl \\
+        --mrna $coding_annotation_gtf \\
+        --lncrna  feelnc.predicted.lncRNA.gtf \\
+        $options.args \\
+        > lncRNA_classes.txt
 
     echo $VERSION > ${software}.version.txt
     """

@@ -138,9 +138,11 @@ if (['star_salmon','hisat2'].contains(params.aligner)) {
     }
 }
 
-include { INPUT_CHECK    } from '../subworkflows/local/input_check'    addParams( options: [:] )
-include { PREPARE_GENOME } from '../subworkflows/local/prepare_genome' addParams( genome_options: publish_genome_options, index_options: publish_index_options, gffread_options: gffread_options,  star_index_options: star_genomegenerate_options,  hisat2_index_options: hisat2_build_options, rsem_index_options: rsem_preparereference_options, salmon_index_options: salmon_index_options )
-include { QUANTIFY_RSEM  } from '../subworkflows/local/quantify_rsem'  addParams( calculateexpression_options: rsem_calculateexpression_options, samtools_sort_options: samtools_sort_genome_options, samtools_index_options: samtools_index_genome_options, samtools_stats_options: samtools_index_genome_options, merge_counts_options: modules['rsem_merge_counts'] )
+include { INPUT_CHECK        } from '../subworkflows/local/input_check'        addParams( options: [:] )
+include { PREPARE_GENOME     } from '../subworkflows/local/prepare_genome'     addParams( genome_options: publish_genome_options, index_options: publish_index_options, gffread_options: gffread_options,  star_index_options: star_genomegenerate_options,  hisat2_index_options: hisat2_build_options, rsem_index_options: rsem_preparereference_options, salmon_index_options: salmon_index_options )
+include { QUANTIFY_RSEM      } from '../subworkflows/local/quantify_rsem'      addParams( calculateexpression_options: rsem_calculateexpression_options, samtools_sort_options: samtools_sort_genome_options, samtools_index_options: samtools_index_genome_options, samtools_stats_options: samtools_index_genome_options, merge_counts_options: modules['rsem_merge_counts'] )
+include { QUANTIFY_STRINGTIE } from '../subworkflows/local/quantify_stringtie' addParams( stringtie_merge_options: modules['stringtie_merge'], format_stringtie_gtf_options: modules['format_stringtie_gtf'], stringtie_quantify_options: modules['stringtie_quantify'])
+include { ANNOTATE_FEELNC } from '../subworkflows/local/annotate_feelnc'       addParams( feelnc_filter_options: modules['feelnc_filter'], feelnc_codpot_options: modules['feelnc_codpot'], assign_feelnc_biotype_options: modules['assign_feelnc_biotype'], feelnc_classifier_options: modules['feelnc_classifier'])
 include { QUANTIFY_SALMON as QUANTIFY_STAR_SALMON } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['star_salmon_tximport'], salmon_quant_options: modules['star_salmon_quant'], merge_counts_options: modules['star_salmon_merge_counts'] )
 include { QUANTIFY_SALMON as QUANTIFY_SALMON      } from '../subworkflows/local/quantify_salmon'    addParams( genome_options: publish_genome_options, tximport_options: modules['salmon_tximport'], salmon_quant_options: salmon_quant_options, merge_counts_options: modules['salmon_merge_counts'] )
 
@@ -159,17 +161,8 @@ if (!params.save_merged_fastq) { cat_fastq_options['publish_files'] = false }
 def sortmerna_options           = modules['sortmerna']
 if (params.save_non_ribo_reads) { sortmerna_options.publish_files.put('fastq.gz','') }
 
-def stringtie_annotate_options   = modules['stringtie']
-stringtie_annotate_options.args  += params.stringtie_ignore_gtf ? '' : Utils.joinModuleArgs(['-e'])
-
-def stringtie_merge_options   = modules['stringtie']
-// stringtie_merge_options.args  += params.stringtie_ignore_gtf ? '' : Utils.joinModuleArgs(['-e'])
-
-def stringtie_quantify_options   = modules['stringtie']
-stringtie_quantify_options.args  += Utils.joinModuleArgs(['-e'])
-
-def feelnc_filter_options = modules['feelnc']
-def feelnc_codpot_options = modules['feelnc'] //TODO
+def stringtie_options  = modules['stringtie']
+stringtie_options.args += params.stringtie_ignore_gtf ? '' : Utils.joinModuleArgs(['-e'])
 
 def subread_featurecounts_options  = modules['subread_featurecounts']
 def biotype                        = params.gencode ? "gene_type" : params.featurecounts_group_type
@@ -180,11 +173,11 @@ include { SAMTOOLS_SORT                   } from '../modules/nf-core/software/sa
 include { PRESEQ_LCEXTRAP                 } from '../modules/nf-core/software/preseq/lcextrap/main'       addParams( options: modules['preseq_lcextrap']                   )
 include { QUALIMAP_RNASEQ                 } from '../modules/nf-core/software/qualimap/rnaseq/main'       addParams( options: modules['qualimap_rnaseq']                   )
 include { SORTMERNA                       } from '../modules/nf-core/software/sortmerna/main'             addParams( options: sortmerna_options                            )
-include { STRINGTIE as STRINGTIE_ANNOTATE } from '../modules/nf-core/software/stringtie/stringtie/main'   addParams( options: stringtie_annotate_options                   )
-include { STRINGTIE_MERGE                 } from '../modules/local/stringtie_merge'                       addParams( options: stringtie_merge_options                      )
-include { STRINGTIE as STRINGTIE_QUANTIFY } from '../modules/nf-core/software/stringtie/stringtie/main'   addParams( options: stringtie_quantify_options                   )
-include { FEELNC_FILTER                   } from '../modules/local/feelnc_filter'                         addParams( options: feelnc_filter_options                        )
-include { FEELNC_CODPOT                   } from '../modules/local/feelnc_codpot'                         addParams( options: feelnc_codpot_options                        )
+include { STRINGTIE                       } from '../modules/nf-core/software/stringtie/stringtie/main'   addParams( options: stringtie_options                            )
+include { FEELNC_FILTER                   } from '../modules/local/feelnc_filter'                         addParams( options: modules['feelnc_filter']                     )
+include { FEELNC_CODPOT                   } from '../modules/local/feelnc_codpot'                         addParams( options: modules['feelnc_codpot']                     )
+include { ASSIGN_FEELNC_BIOTYPE           } from '../modules/local/assign_feelnc_biotype'                 addParams( options: modules['assign_feelnc_biotype']             )
+include { FEELNC_CLASSIFIER               } from '../modules/local/feelnc_classifier'                     addParams( options: modules['feelnc_classifier']                 )
 include { SUBREAD_FEATURECOUNTS           } from '../modules/nf-core/software/subread/featurecounts/main' addParams( options: subread_featurecounts_options                )
 
 //
@@ -555,39 +548,35 @@ workflow RNASEQ {
 
     //
     // MODULE: STRINGTIE
-    // TODO CREATE a workflow similar to quantify salmon or bam_sort_samtools.nf
     //
     if (!params.skip_alignment && !params.skip_stringtie) {
-        STRINGTIE_ANNOTATE (
+        STRINGTIE (
             ch_genome_bam,
             PREPARE_GENOME.out.gtf
         )
-        ch_software_versions = ch_software_versions.mix(STRINGTIE_ANNOTATE.out.version.first().ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(STRINGTIE.out.version.first().ifEmpty(null))
 
-        STRINGTIE_MERGE (
-            // STRINGTIE_ANNOTATE.out.transcript_gtf.collect{it[1]},
-            STRINGTIE_ANNOTATE.out.transcript_gtf.collect{ meta, gtfs -> gtfs },
-            // SALMON_QUANT.out.results.collect{it[1]},
-            PREPARE_GENOME.out.gtf
-        )
+        //
+        // SUBWORKFLOW: QUANTIFY STRINGTIE ANNOTATED TRANSCRIPTS
+        //
+        if (params.stringtie_ignore_gtf) {
+            QUANTIFY_STRINGTIE (
+                STRINGTIE.out.transcript_gtf.collect{ meta, gtfs -> gtfs },
+                PREPARE_GENOME.out.gtf,
+                ch_genome_bam
+            )
+        }
 
-        STRINGTIE_QUANTIFY (
-            ch_genome_bam,
-            STRINGTIE_MERGE.out.annotation_gtf
-        )
-
-        // Feed with the result of stringtie merge
-        FEELNC_FILTER (
-            STRINGTIE_MERGE.out.annotation_gtf,
-            PREPARE_GENOME.out.gtf
-        )
-
-        // Compute the coding potential (CODPLOT) of candidate transcripts
-        FEELNC_CODPOT (
-            PREPARE_GENOME.out.fasta,
-            PREPARE_GENOME.out.gtf,
-            FEELNC_FILTER.out.lncrna_gtf // candidate lncrna transcripts
-        )
+        //
+        // SUBWORKFLOW: Predict lncrna using FEELNC
+        //
+        if (!params.skip_feelnc && params.stringtie_ignore_gtf) {
+            ANNOTATE_FEELNC (
+                QUANTIFY_STRINGTIE.out.stringtie_merged_biotypes_gtf,
+                PREPARE_GENOME.out.gtf,
+                PREPARE_GENOME.out.fasta
+            )
+        }
     }
 
     //
