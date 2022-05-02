@@ -26,6 +26,7 @@ def add_biotype(annotation_gtf, reference_gff):
 
     with open(annotation_gtf) as annot_fh:
         for line in annot_fh:
+            if line.startswith('#'): continue
             fields = line.strip().split('\t')
             if fields[2] != "transcript": continue
             tId = re.search('transcript_id "([^;]*)";*', fields[8] )
