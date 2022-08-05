@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[3.3-BOVREG-1](https://github.com/nf-core/rnaseq/releases/tag/3.3-BOVREG-1)] - 2022-08-05
+
+### Enhancements & fixes
+
+* Add Stringtie merge annotation based on the [TAGADA pipeline](https://github.com/FAANG/analysis-TAGADA)
+* Add Stringtie quantification based on the [TAGADA pipeline](https://github.com/FAANG/analysis-TAGADA)
+* Add [FEELnc](https://github.com/tderrien/FEELnc) to the pipeline to annotate lncRNAs based on the [TAGADA pipeline](https://github.com/FAANG/analysis-TAGADA)
+
 ## [[3.3](https://github.com/nf-core/rnaseq/releases/tag/3.3)] - 2021-07-26
 
 ### Enhancements & fixes
