@@ -3,6 +3,36 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [[3.3-BOVREG-1](https://github.com/BovReg/rnaseq/releases/tag/3.3-BOVREG-1)] - 2022-08-08
+
+### Enhancements & fixes
+
+* Add Stringtie merge annotation based on the [TAGADA pipeline](https://github.com/FAANG/analysis-TAGADA)
+* Add Stringtie quantification based on the [TAGADA pipeline](https://github.com/FAANG/analysis-TAGADA)
+* Add [FEELnc](https://github.com/tderrien/FEELnc) to the pipeline to annotate lncRNAs based on the [TAGADA pipeline](https://github.com/FAANG/analysis-TAGADA)
+
+## [[3.3](https://github.com/nf-core/rnaseq/releases/tag/3.3)] - 2021-07-26
+
+### Enhancements & fixes
+
+* Updated pipeline template to [nf-core/tools 2.0.1](https://github.com/nf-core/tools/releases/tag/2.0.1)
+* [[#668](https://github.com/nf-core/rnaseq/issues/668)] - Salmon quant with UMI-tools does not work
+* [[#674](https://github.com/nf-core/rnaseq/issues/674)] - Launch pipeline regex fails
+
+### Software dependencies
+
+Note, since the pipeline is now using Nextflow DSL2, each process will be run with its own [Biocontainer](https://biocontainers.pro/#/registry). This means that on occasion it is entirely possible for the pipeline to be using different versions of the same tool. However, the overall software dependency changes compared to the last release have been listed below for reference.
+
+| Dependency  | Old version | New version |
+|-------------|-------------|-------------|
+| `umi_tools` | 1.1.1       | 1.1.2       |
+| `samtools`  | 1.10        | 1.12        |
+| `stringtie` | 2.1.4       | 2.1.7       |
+
+> **NB:** Dependency has been __updated__ if both old and new version information is present.
+> **NB:** Dependency has been __added__ if just the new version information is present.
+> **NB:** Dependency has been __removed__ if version information isn't present.
+
 ## [[3.2](https://github.com/nf-core/rnaseq/releases/tag/3.2)] - 2021-06-18
 
 ### Enhancements & fixes

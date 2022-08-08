@@ -39,15 +39,16 @@ The SRA download functionality has been removed from the pipeline (`>=3.2`) and 
 8. UMI-based deduplication ([`UMI-tools`](https://github.com/CGATOxford/UMI-tools))
 9. Duplicate read marking ([`picard MarkDuplicates`](https://broadinstitute.github.io/picard/))
 10. Transcript assembly and quantification ([`StringTie`](https://ccb.jhu.edu/software/stringtie/))
-11. Create bigWig coverage files ([`BEDTools`](https://github.com/arq5x/bedtools2/), [`bedGraphToBigWig`](http://hgdownload.soe.ucsc.edu/admin/exe/))
+11. Predict lncRNAs ([`FEELnc`](https://github.com/tderrien/FEELnc))
+12. Create bigWig coverage files ([`BEDTools`](https://github.com/arq5x/bedtools2/), [`bedGraphToBigWig`](http://hgdownload.soe.ucsc.edu/admin/exe/))
 12. Extensive quality control:
     1. [`RSeQC`](http://rseqc.sourceforge.net/)
     2. [`Qualimap`](http://qualimap.bioinfo.cipf.es/)
     3. [`dupRadar`](https://bioconductor.org/packages/release/bioc/html/dupRadar.html)
     4. [`Preseq`](http://smithlabresearch.org/software/preseq/)
     5. [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)
-13. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); *optional*)
-14. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
+12. Pseudo-alignment and quantification ([`Salmon`](https://combine-lab.github.io/salmon/); *optional*)
+15. Present QC for raw read, alignment, gene biotype, sample similarity, and strand-specificity checks ([`MultiQC`](http://multiqc.info/), [`R`](https://www.r-project.org/))
 
 > * **NB:** Quantification isn't performed if using `--aligner hisat2` due to the lack of an appropriate option to calculate accurate expression estimates from HISAT2 derived genomic alignments. However, you can use this route if you have a preference for the alignment, QC and other types of downstream analysis compatible with the output of HISAT2.
 > * **NB:** The `--aligner star_rsem` option will require STAR indices built from version 2.7.6a or later. However, in order to support legacy usage of genomes hosted on AWS iGenomes the `--aligner star_salmon` option requires indices built with STAR 2.6.1d or earlier. Please refer to this [issue](https://github.com/nf-core/rnaseq/issues/498) for further details.
@@ -94,7 +95,9 @@ These scripts were originally written for use at the [National Genomics Infrastr
 
 The pipeline was re-written in Nextflow DSL2 by Harshil Patel ([@drpatelh](https://github.com/drpatelh)) from [The Bioinformatics & Biostatistics Group](https://www.crick.ac.uk/research/science-technology-platforms/bioinformatics-and-biostatistics/) at [The Francis Crick Institute](https://www.crick.ac.uk/), London.
 
-Many thanks to other who have helped out along the way too, including (but not limited to):
+The pipeline was readapted to be used in the framework of the [BovReg](https://www.bovreg.eu/) project by Jose Espinosa-Carrasco ([@joseespinosa](https://github.com/joseespinosa)) and Björn Langer ([@bjlang](https://github.com/bjlang)). The main addition needed by the project was the annotation and quantification of de novo annotated transcripts using StringTie and the prediction of lncRNAs using FEELnc and the output of StringTie. Both features were implemented using as inspiration the [TAGADA pipeline](https://github.com/FAANG/analysis-TAGADA/blob/master/main.nf) from the [GENE-SWitCH](https://www.gene-switch.eu/) project. Both the BovReg and the GENE-SWitCH projects form part of the [EuroFAANG](https://eurofaang.eu/) effort to annotate the genome of farmed animals.
+
+Many thanks to others who have helped out along the way too, including (but not limited to):
 [@Galithil](https://github.com/Galithil),
 [@pditommaso](https://github.com/pditommaso),
 [@orzechoj](https://github.com/orzechoj),
@@ -123,3 +126,9 @@ You can cite the `nf-core` publication as follows:
 > Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.
 >
 > _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).
+
+## Funding
+
+BovReg project has received funding from the European Union’s Horizon 2020 research and innovation program under Grant Agreement ID. 815668.
+
+This repository reflects only the listed contributors views. Neither the European Commission nor its Agency REA are responsible for any use that may be made of the information it contains.
