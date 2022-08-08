@@ -95,9 +95,9 @@ These scripts were originally written for use at the [National Genomics Infrastr
 
 The pipeline was re-written in Nextflow DSL2 by Harshil Patel ([@drpatelh](https://github.com/drpatelh)) from [The Bioinformatics & Biostatistics Group](https://www.crick.ac.uk/research/science-technology-platforms/bioinformatics-and-biostatistics/) at [The Francis Crick Institute](https://www.crick.ac.uk/), London.
 
-The pipeline was readapted to be used in the framework of the [BovReg](https://www.bovreg.eu/) project by Jose Espinosa-Carrasco ([@joseespinosa](https://github.com/joseespinosa)) and Björn Langer ([@bjlang](https://github.com/bjlang)). The main addition needed by the project was the annotation and quantification of the novo annotated transcripts using Stringtie and the prediction of lncRNAs using FEELnc and the output of Stringtie. Both features were implemented using as inspiration the [TAGADA pipeline](https://github.com/FAANG/analysis-TAGADA/blob/master/main.nf) from the [GENE-SWitCH](https://www.gene-switch.eu/) project. Both the BovReg and the GENE-SWitCH projects form part of the [EuroFAANG](https://eurofaang.eu/) effort to annotate the genome of farmed animals.
+The pipeline was readapted to be used in the framework of the [BovReg](https://www.bovreg.eu/) project by Jose Espinosa-Carrasco ([@joseespinosa](https://github.com/joseespinosa)) and Björn Langer ([@bjlang](https://github.com/bjlang)). The main addition needed by the project was the annotation and quantification of de novo annotated transcripts using StringTie and the prediction of lncRNAs using FEELnc and the output of StringTie. Both features were implemented using as inspiration the [TAGADA pipeline](https://github.com/FAANG/analysis-TAGADA/blob/master/main.nf) from the [GENE-SWitCH](https://www.gene-switch.eu/) project. Both the BovReg and the GENE-SWitCH projects form part of the [EuroFAANG](https://eurofaang.eu/) effort to annotate the genome of farmed animals.
 
-Many thanks to other who have helped out along the way too, including (but not limited to):
+Many thanks to others who have helped out along the way too, including (but not limited to):
 [@Galithil](https://github.com/Galithil),
 [@pditommaso](https://github.com/pditommaso),
 [@orzechoj](https://github.com/orzechoj),
